@@ -15,11 +15,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        app()[
+            \Spatie\Permission\PermissionRegistrar::class
+        ]->forgetCachedPermissions();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        $this->call([SpatieSeed::class]);
+
+        if (app()->environment("local")) {
+            // $this->call([UserSeeder::class, DummyDataSeeder::class]);
+            $this->call([FactoryDevSeed::class]);
+        }
     }
 }
